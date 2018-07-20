@@ -5,7 +5,7 @@ const SCOPES = 'https://www.googleapis.com/auth/youtube';
 const authorizeButton = document.getElementById('authorize-button');
 const signoutButton = document.getElementById('signout-button');
 
-let videos = [];
+let tmpVideos = [];
 
 function handleClientLoad() {
     gapi.load('client:auth2', initClient);
@@ -58,11 +58,11 @@ function getChannel() {
     gapi.client.youtube.channels.list({
         'part': 'snippet,contentDetails',
         'mine': true
-    }).then(function(response) {
-        console.log(response.result);
+    }).then(function (response) {
         getUploads(response.result.items[0].contentDetails.relatedPlaylists.uploads)
     });
 }
+
 function getUploads(uploadsId, nextPage) {
     const requestOptions = {
         playlistId: uploadsId,
@@ -71,11 +71,33 @@ function getUploads(uploadsId, nextPage) {
     };
     if (nextPage) requestOptions.pageToken = nextPage;
     gapi.client.youtube.playlistItems.list(requestOptions).then(res => {
-        videos = [...videos, ...res.result.items];
-        if (res.result.nextPageToken) getUploads(uploadsId, res.result.nextPageToken)
+        tmpVideos = [...tmpVideos, ...res.result.items];
+        if (res.result.nextPageToken) {
+            getUploads(uploadsId, res.result.nextPageToken)
+        } else {
+            getVideos();
+        }
     });
-
 }
-function changeDescription() {
 
+function getVideos() {
+    tmpVideos.forEach((item) => {
+            gapi.client.youtube.videos.list({
+                id: item.snippet.resourceId.videoId,
+                part: "snippet,contentDetails,statistics"
+            }).then(res => {
+                console.log(res.result);
+                gapi.client.youtube.videos.update({
+                        "part": 'snippet',
+                    },
+                    ({
+                        'id': res.result.items[0].id,
+                        'kind': res.result.items[0].kind,
+                        'snippet.categoryId': res.result.items[0].snippet.categoryId,
+                        'snippet.title': res.result.items[0].snippet.title,
+                        'snippet.description': 'wow ' + res.result.items[0].snippet.description
+                    })).then((res) => console.log(res))
+            });
+        }
+    )
 }
