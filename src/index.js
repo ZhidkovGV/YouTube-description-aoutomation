@@ -1,11 +1,81 @@
-const start = () => {
-        gapi.client.init({
-            'apiKey': 'AIzaSyDcK82q0HarhU9ISfH4hjKRZZ0vwdR0_Aw',
-            // Your API key will be automatically added to the Discovery Document URLs.
-            'discoveryDocs': ['https://people.googleapis.com/$discovery/rest'],
-            // clientId and scope are optional if auth is not required.
-            'clientId': '1089365127935-1ets6q659t9v0g02kged3jirhrc3ideo.apps.googleusercontent.com',
-            'scope': 'profile',
-        }).then(res => res.json()).then(res => console.log(res))
+const CLIENT_ID = '97685359086-lhe16dl0llnlvhaibnoiqblmanfbdnbn.apps.googleusercontent.com';
+const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"];
+const SCOPES = 'https://www.googleapis.com/auth/youtube';
+
+const authorizeButton = document.getElementById('authorize-button');
+const signoutButton = document.getElementById('signout-button');
+
+let videos = [];
+
+function handleClientLoad() {
+    gapi.load('client:auth2', initClient);
+}
+
+function initClient() {
+    gapi.client.init({
+        discoveryDocs: DISCOVERY_DOCS,
+        clientId: CLIENT_ID,
+        scope: SCOPES
+    }).then(function () {
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+        authorizeButton.onclick = handleAuthClick;
+        signoutButton.onclick = handleSignoutClick;
+    });
+}
+
+/**
+ *  Called when the signed in status changes, to update the UI
+ *  appropriately. After a sign-in, the API is called.
+ */
+function updateSigninStatus(isSignedIn) {
+    if (isSignedIn) {
+        authorizeButton.style.display = 'none';
+        signoutButton.style.display = 'block';
+        getChannel();
+    } else {
+        authorizeButton.style.display = 'block';
+        signoutButton.style.display = 'none';
+    }
+}
+
+/**
+ *  Sign in the user upon button click.
+ */
+function handleAuthClick(event) {
+    gapi.auth2.getAuthInstance().signIn();
+}
+
+/**
+ *  Sign out the user upon button click.
+ */
+function handleSignoutClick(event) {
+    gapi.auth2.getAuthInstance().signOut();
+}
+
+function getChannel() {
+    gapi.client.youtube.channels.list({
+        'part': 'snippet,contentDetails',
+        'mine': true
+    }).then(function(response) {
+        console.log(response.result);
+        getUploads(response.result.items[0].contentDetails.relatedPlaylists.uploads)
+    });
+}
+function getUploads(uploadsId, nextPage) {
+    const requestOptions = {
+        playlistId: uploadsId,
+        part: 'snippet',
+        maxResults: 50
     };
-gapi.load('client', start);
+    if (nextPage) requestOptions.pageToken = nextPage;
+    gapi.client.youtube.playlistItems.list(requestOptions).then(res => {
+        videos = [...videos, ...res.result.items];
+        if (res.result.nextPageToken) getUploads(uploadsId, res.result.nextPageToken)
+    });
+
+}
+function changeDescription() {
+
+}

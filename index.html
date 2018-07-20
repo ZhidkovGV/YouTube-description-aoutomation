@@ -1,11 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Change Description</title>
+    <title>YouTube Data API Quickstart</title>
+    <meta charset='utf-8' />
 </head>
 <body>
-<script src="//apis.google.com/js/client:plusone.js"></script>
-<script src="src/index.js"></script>
+<p>YouTube Data API Quickstart</p>
+
+<!--Add buttons to initiate auth sequence and sign out-->
+<button id="authorize-button" style="display: none;">Authorize</button>
+<button id="signout-button" style="display: none;">Sign Out</button>
+
+<pre id="content"></pre>
+
+<script type="text/javascript" src="src/index.js">
+</script>
+<script async defer src="https://apis.google.com/js/api.js"
+        onload="this.onload=function(){};handleClientLoad()"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
 </body>
 </html>
