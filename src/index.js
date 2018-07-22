@@ -86,16 +86,18 @@ function getVideos() {
                 id: item.snippet.resourceId.videoId,
                 part: "snippet,contentDetails,statistics"
             }).then(res => {
-                console.log(res.result);
-                gapi.client.youtube.videos.update({ //cant update
-                        "part": 'snippet', // maybe because of Google+ API
+                console.log(res.result.items[0].snippet.title,);
+                gapi.client.youtube.videos.update({
+                        "part": 'snippet',
                     },
                     ({
                         'id': res.result.items[0].id,
                         'kind': res.result.items[0].kind,
-                        'snippet.categoryId': res.result.items[0].snippet.categoryId,
-                        'snippet.title': res.result.items[0].snippet.title,
-                        'snippet.description': 'wow ' + res.result.items[0].snippet.description
+                        snippet: {
+                            categoryId:  res.result.items[0].snippet.categoryId,
+                            title: res.result.items[0].snippet.title,
+                            description: 'wow ' + res.result.items[0].snippet.description
+                        }
                     })).then((res) => console.log(res))
             });
         }
