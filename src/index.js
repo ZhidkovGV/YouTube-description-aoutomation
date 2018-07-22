@@ -92,7 +92,7 @@ function getVideos() {
                             title: res.result.items[0].snippet.title,
                             description: REPLACE_DESC_WITH === '' ?
                                 ADD_TO_BEGINIG_OF_DESC + res.result.items[0].snippet.description + ADD_TO_END_OF_DESC :
-                                REPLACE_DESC_WITH
+                                REPLACE_DESC_WITH //MOST IMPORTANT THING HERE. BE CAREFUL
                         }
                     })).then((res) => console.log(res))
             });
