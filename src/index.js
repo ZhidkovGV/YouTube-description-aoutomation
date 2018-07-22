@@ -3,7 +3,7 @@ const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/youtube/v3
 const SCOPES = 'https://www.googleapis.com/auth/youtube';
 
 const ADD_TO_END_OF_DESC = '';
-const ADD_TO_BEGINIG_OF_DESC = 'wow';
+const ADD_TO_BEGINIG_OF_DESC = '';
 const REPLACE_DESC_WITH = '';
 
 const authorizeButton = document.getElementById('authorize-button');
@@ -29,10 +29,6 @@ function initClient() {
     });
 }
 
-/**
- *  Called when the signed in status changes, to update the UI
- *  appropriately. After a sign-in, the API is called.
- */
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
         authorizeButton.style.display = 'none';
@@ -44,16 +40,10 @@ function updateSigninStatus(isSignedIn) {
     }
 }
 
-/**
- *  Sign in the user upon button click.
- */
 function handleAuthClick(event) {
     gapi.auth2.getAuthInstance().signIn();
 }
 
-/**
- *  Sign out the user upon button click.
- */
 function handleSignoutClick(event) {
     gapi.auth2.getAuthInstance().signOut();
 }
