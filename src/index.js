@@ -87,8 +87,8 @@ function getVideos() {
                 part: "snippet,contentDetails,statistics"
             }).then(res => {
                 console.log(res.result);
-                gapi.client.youtube.videos.update({
-                        "part": 'snippet',
+                gapi.client.youtube.videos.update({ //cant update
+                        "part": 'snippet', // maybe because of Google+ API
                     },
                     ({
                         'id': res.result.items[0].id,
