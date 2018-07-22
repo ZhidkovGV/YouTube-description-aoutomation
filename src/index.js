@@ -2,6 +2,10 @@ const CLIENT_ID = '97685359086-lhe16dl0llnlvhaibnoiqblmanfbdnbn.apps.googleuserc
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"];
 const SCOPES = 'https://www.googleapis.com/auth/youtube';
 
+const ADD_TO_END_OF_DESC = '';
+const ADD_TO_BEGINIG_OF_DESC = 'wow';
+const REPLACE_DESC_WITH = '';
+
 const authorizeButton = document.getElementById('authorize-button');
 const signoutButton = document.getElementById('signout-button');
 
@@ -94,9 +98,11 @@ function getVideos() {
                         'id': res.result.items[0].id,
                         'kind': res.result.items[0].kind,
                         snippet: {
-                            categoryId:  res.result.items[0].snippet.categoryId,
+                            categoryId: res.result.items[0].snippet.categoryId,
                             title: res.result.items[0].snippet.title,
-                            description: 'wow ' + res.result.items[0].snippet.description
+                            description: REPLACE_DESC_WITH === '' ?
+                                ADD_TO_BEGINIG_OF_DESC + res.result.items[0].snippet.description + ADD_TO_END_OF_DESC :
+                                REPLACE_DESC_WITH
                         }
                     })).then((res) => console.log(res))
             });
