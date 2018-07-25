@@ -65,7 +65,7 @@ function getUploads(uploadsId, nextPage) {
     };
     if (nextPage) requestOptions.pageToken = nextPage;
     gapi.client.youtube.playlistItems.list(requestOptions).then(res => {
-        tmpVideos = [...tmpVideos, ...res.result.items];
+        tmpVideos.push(res.result.items);
         if (res.result.nextPageToken) {
             getUploads(uploadsId, res.result.nextPageToken)
         } else {
@@ -92,7 +92,7 @@ function getVideos() {
                             title: res.result.items[0].snippet.title,
                             description: REPLACE_DESC_WITH === '' ?
                                 ADD_TO_BEGINIG_OF_DESC + res.result.items[0].snippet.description + ADD_TO_END_OF_DESC :
-                                REPLACE_DESC_WITH //MOST IMPORTANT THING HERE. BE CAREFUL
+                                REPLACE_DESC_WITH
                         }
                     })).then((res) => console.log(res))
             });
