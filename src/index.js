@@ -6,7 +6,8 @@ const authorizeButton = document.getElementById('authorize-button');
 const signoutButton = document.getElementById('signout-button');
 
 let tmpVideos = [];
-
+let trhreee= tmpVideos[];
+let trheeStvola = tmpVideos;
 function handleClientLoad() {
     gapi.load('client:auth2', initClient);
 }
